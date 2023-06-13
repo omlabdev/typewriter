@@ -1,0 +1,48 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #ccc;
+  font-family: 'Courier Prime', monospace;
+  height: 100vh;
+  margin: 0;
+  position: relative;
+}
+
+/* Hide the input and prevent direct interaction with it */
+.input-wrapper {
+  opacity: 0;
+  position: relative;
+}
+
+.input-wrapper::before {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  src: url('/fonts/courierprime-regular.woff2');
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-style: italic;
+  src: url('/fonts/courierprime-italic.woff2');
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: bold;
+  src: url('/fonts/courierprime-bold.woff2');
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-style: italic;
+  font-weight: bold;
+  src: url('/fonts/courierprime-bolditalic.woff2');
+}

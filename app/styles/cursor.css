@@ -1,0 +1,20 @@
+.cursor-wrapper {
+  /* 1/3% - height + page padding */
+  bottom: calc(33.33% - 18px + 15px);
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+}
+
+.cursor {
+  background-color: #ccc;
+  display: block;
+  height: 18px;
+  width: 10px;
+}
+
+.cursor--off {
+  background-color: transparent;
+}

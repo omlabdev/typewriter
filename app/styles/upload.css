@@ -1,0 +1,25 @@
+.upload {
+  align-items: center;
+  background-color: rgba(0, 0, 0, .5);
+  display: flex;
+  flex-direction: column;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  z-index: 1;
+}
+
+.upload--hide {
+  display: none;
+}
+
+.upload-icon {
+  height: 100px;
+  margin-bottom: 20px;
+  width: auto;
+}
+
+.upload-text {
+  color: #fff;
+  font-size: 25px;
+}

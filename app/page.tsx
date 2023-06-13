@@ -1,95 +1,60 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client"
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import React from 'react'
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+import Input from './components/Input.jsx'
+import Cursor from './components/Cursor.jsx'
+import Pages from './components/Pages.jsx'
+import Header from './components/Header.jsx'
+import Upload from './components/Upload.jsx'
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+function App() {
+  const [input, setInput] = React.useState('')
+  const [selectionEnd, setSelectionEnd] = React.useState(0)
+  const [mode, setMode] = React.useState('write')
+  const [pageSize, setPageSize] = React.useState('a4')
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+  function handleInput(newInput: string, newSelectionEnd: number) {
+    setInput(newInput)
+    setSelectionEnd(newSelectionEnd)
+  }
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
+  function handleDownload() {
+    const text = encodeURIComponent(input)
+    const element = document.createElement('a')
+    element.setAttribute('href', `data:text/plaincharset=utf-8,${text}`)
+    element.setAttribute('download', 'text.txt')
+    element.style.display = 'none'
+    document.body.appendChild(element)
+    element.click()
+    document.body.removeChild(element)
+  }
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+  function handleDrop(file: File) {
+    const fileType = file.type
+    const validExtensions = ['text/plain']
+    if (validExtensions.includes(fileType)) {
+      const fileReader = new FileReader()
+      fileReader.onload = () => {
+        const newInput = fileReader.result?.toString() || ''
+        setInput(newInput)
+        setSelectionEnd(newInput.length)
+      }
+      fileReader.readAsText(file)
+    } else {
+      alert('This is not a text file!')
+    }
+  }
+
+  return(
+    <div>
+      <Upload handleDrop={handleDrop} />
+      <Header handleDownload={handleDownload} handleModeChange={setMode} handleSizeChange={setPageSize} mode={mode} />
+      <Input handleInput={handleInput} input={input} mode={mode} />
+      <Cursor mode={mode} />
+      <Pages input={input} selectionEnd={selectionEnd} mode={mode} pageSize={pageSize} />
+    </div>
   )
 }
+
+export default App
