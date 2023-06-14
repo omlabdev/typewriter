@@ -20,14 +20,16 @@ function App() {
   }
 
   function handleDownload() {
-    const text = encodeURIComponent(input)
-    const element = document.createElement('a')
-    element.setAttribute('href', `data:text/plaincharset=utf-8,${text}`)
-    element.setAttribute('download', 'text.txt')
-    element.style.display = 'none'
-    document.body.appendChild(element)
-    element.click()
-    document.body.removeChild(element)
+    if (typeof window === 'object') {
+      const text = encodeURIComponent(input)
+      const element = document.createElement('a')
+      element.setAttribute('href', `data:text/plaincharset=utf-8,${text}`)
+      element.setAttribute('download', 'text.txt')
+      element.style.display = 'none'
+      document.body.appendChild(element)
+      element.click()
+      document.body.removeChild(element)
+    }
   }
 
   function handleDrop(file: File) {
