@@ -15,7 +15,7 @@ function Input({ input, handleInput, mode }) {
   }
 
   // Don't let the input lose focus
-  React.useEffect(() => document.onmousedown = (event) => event.preventDefault(), [])
+  React.useEffect(() => document.onmousedown = (event) => event?.preventDefault(), [])
 
   return(
     <div className="input-wrapper">
