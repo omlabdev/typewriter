@@ -64,7 +64,7 @@ function Header({ handleDownload, handleModeChange, handleSizeChange, mode }: { 
   return(
     <header className="header">
       <h1 className="header-title">
-        Pseudonimus
+        Typewriter
       </h1>
       <ul className="header-list ms-auto">
         <li className="header-list__item">

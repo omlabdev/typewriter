@@ -44,6 +44,8 @@ function Pages({ selectionEnd, input, mode, pageSize }: { selectionEnd: number, 
     const { height, width, maxLines, maxLineLength } = pageSizes[pageSize]
     // Marker used to keep track of the cursor's position
     const marker = '\0'
+    // Number of "soft wraps" on the current line (needed to correclty position the page/cursor horizontaly)
+    let softWrapsCount = 0
     // Current cursor position
     const cursorPosition = selectionEnd - 1
     // Character at the cursor's position
@@ -58,8 +60,6 @@ function Pages({ selectionEnd, input, mode, pageSize }: { selectionEnd: number, 
     }
     // Replace the character at the current position with the replacement string and split the lines into an array
     const lines = `${input.substring(0, cursorPosition)}${replacement}${input.substring(cursorPosition + 1)}`.split('\n')
-    // Get the ammount of line ends
-    const lineEnds = lines.length
     // For each line, check to see if there's a "soft wrap" and find the position of the cursor
     let currentLine = 0
     for (var i = 0; i < lines.length; i++) {
@@ -68,13 +68,14 @@ function Pages({ selectionEnd, input, mode, pageSize }: { selectionEnd: number, 
       if (line.indexOf(marker) > -1) {
         currentLine = i
       }
-      // If the line length exceeds the maxLineLength const, split it into two lines
+      // If the line length exceeds the maxLineLength const, split it into two lines (soft wrap)
       if (line.length > maxLineLength) {
         lines[i] = line.slice(maxLineLength + 1)
         lines.splice(i, 0, line.substr(0, maxLineLength + 1))
         // If this index was the current line but it's not anymore then the current line
         // must be the one that was split from this one
         if ((currentLine === i) && (lines[i].indexOf(marker) === -1)) {
+          softWrapsCount++
           currentLine = i + 1
         }
       }
@@ -101,8 +102,8 @@ function Pages({ selectionEnd, input, mode, pageSize }: { selectionEnd: number, 
     // Truncate the lines array so we keep only the lines previous to the current one
     lines.length = currentLine
     // Current horizontal position is the cursor position minus the length of each previous line
-    // plus a little space so the cursor doesn't cover up the characters
-    const currentPosition = selectionEnd - lines.reduce((length, line) => length + line.length, 0) - currentLine + 0.5
+    // plus the soft wraps count and a little space so the cursor doesn't cover up the characters
+    const currentPosition = selectionEnd - lines.reduce((length, line) => length + line.length, 0) - currentLine + softWrapsCount + 0.5
     // Move the paper to the left based on the position on the current line
     const style: { right?: string, bottom?: string } = {}
     style.right = `calc(50% - ${width} + ${dimensions.padding} + ${currentPosition * dimensions.fontWidth}px)`
