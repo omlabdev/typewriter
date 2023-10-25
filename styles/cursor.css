@@ -9,12 +9,16 @@
 }
 
 .cursor {
+  animation: blink 1.25s ease-in-out infinite;
   background-color: #ccc;
   display: block;
   height: 18px;
+  opacity: .7;
   width: 10px;
 }
 
-.cursor--off {
-  background-color: transparent;
+@keyframes blink {
+  0% { opacity: 0; }
+  50% { opacity: .7; }
+  100% { opacity: 0; }
 }
