@@ -1,11 +1,15 @@
-"use client"
+'use client'
 
 import '../styles/upload.css'
 
-import React from 'react'
+import Image from 'next/image'
 
-function Upload({ handleDrop }) {
-  const [display, setDisplay] = React.useState(false)
+import { useState } from 'react'
+
+import UploadIcon from '../public/icons/upload.svg'
+
+function Upload({ handleDrop }: { handleDrop: (file: File) => void }) {
+  const [display, setDisplay] = useState(false)
 
   if (typeof window === 'object') {
     const dropZoneElement = document.body
@@ -23,13 +27,13 @@ function Upload({ handleDrop }) {
     dropZoneElement.addEventListener('drop', (event) => {
       event.preventDefault()
       setDisplay(false)
-      handleDrop(event.dataTransfer.files[0])
+      if (event.dataTransfer) handleDrop(event.dataTransfer.files[0])
     });
   }
 
   return(
     <div id="upload" className={`upload ${display ? '' : 'upload--hide'}`}>
-      <img className="upload-icon" src="/icons/upload.svg" alt="Upload" />
+      <Image className="upload-icon" src={UploadIcon} alt="Upload" />
       <span className="upload-text">
         Upload text file
       </span>

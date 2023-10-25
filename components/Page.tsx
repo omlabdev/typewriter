@@ -1,10 +1,11 @@
-"use client"
+'use client'
 
 import '../styles/paper.css'
 
-import React from 'react'
+import { Dimensions } from '@/types/dimensions'
+import { PageDimensions } from '@/types/pageDimensions'
 
-function Page({ dimensions, pageDimensions, content }) {
+function Page({ dimensions, pageDimensions, content }: { dimensions: Dimensions, pageDimensions: PageDimensions, content: string }) {
   const styles = {
     height: pageDimensions.height,
     width: pageDimensions.width,

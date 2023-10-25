@@ -1,0 +1,1 @@
+export type PageSize = 'a4' | 'ltr'

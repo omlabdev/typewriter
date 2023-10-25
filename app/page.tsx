@@ -1,18 +1,21 @@
-"use client"
+'use client'
 
-import React from 'react'
+import { useState } from 'react'
 
-import Input from './components/Input.jsx'
-import Cursor from './components/Cursor.jsx'
-import Pages from './components/Pages.jsx'
-import Header from './components/Header.jsx'
-import Upload from './components/Upload.jsx'
+import { Mode } from '@/types/mode'
+import { PageSize } from '@/types/pageSize'
+
+import Input from '../components/Input'
+import Cursor from '../components/Cursor'
+import Pages from '../components/Pages'
+import Header from '../components/Header'
+import Upload from '../components/Upload'
 
 function App() {
-  const [input, setInput] = React.useState('')
-  const [selectionEnd, setSelectionEnd] = React.useState(0)
-  const [mode, setMode] = React.useState('write')
-  const [pageSize, setPageSize] = React.useState('a4')
+  const [input, setInput] = useState('')
+  const [selectionEnd, setSelectionEnd] = useState(0)
+  const [mode, setMode] = useState<Mode>('write')
+  const [pageSize, setPageSize] = useState<PageSize>('a4')
 
   function handleInput(newInput: string, newSelectionEnd: number) {
     setInput(newInput)

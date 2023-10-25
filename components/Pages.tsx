@@ -1,41 +1,46 @@
-"use client"
+'use client'
 
 import '../styles/papers.css'
 
-import React from 'react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
 
-import Page from './Page.jsx'
+import Page from './Page'
 
-function Pages({ selectionEnd, input, mode, pageSize }) {
-  const pageSizes = {
-    a4: {
-      height: '297mm',
-      width: '210mm',
-      maxLines: 60,
-      maxLineLength: 70,
-    },
-    ltr: {
-      height: '8.5in',
-      width: '11in',
-      maxLines: 60,
-      maxLineLength: 70,
-    }
+import { Mode } from '@/types/mode'
+import { PageSize } from '@/types/pageSize'
+import { Dimensions } from '@/types/dimensions'
+import { PageDimensions } from '@/types/pageDimensions'
+
+const pageSizes: { [label: string]: PageDimensions } = {
+  a4: {
+    height: '297mm',
+    width: '210mm',
+    maxLines: 60,
+    maxLineLength: 70,
+  },
+  ltr: {
+    height: '8.5in',
+    width: '11in',
+    maxLines: 60,
+    maxLineLength: 70,
   }
-  // Dimensions constants regarding the pages and font
-  const dimensions = {
-    margin: '15px',
-    padding: '15px',
-    fontSize: '18px',
-    fontWidth: 10.8,
-  }
+}
+// Dimensions constants regarding the pages and font
+const dimensions: Dimensions = {
+  margin: '15px',
+  padding: '15px',
+  fontSize: '18px',
+  fontWidth: 10.8,
+}
 
-  const [pages, setPages] = React.useState([])
-  const [styles, setStyles] = React.useState({})
+function Pages({ selectionEnd, input, mode, pageSize }: { selectionEnd: number, input: string, mode: Mode, pageSize: PageSize }) {
+  const [pages, setPages] = useState<ReactNode[]>([])
+  const [styles, setStyles] = useState({})
 
   /**
    * Renders the text in the input element
    */
-  function renderPages() {
+  const renderPages = useCallback(() => {
     const { height, width, maxLines, maxLineLength } = pageSizes[pageSize]
     // Marker used to keep track of the cursor's position
     const marker = '\0'
@@ -99,7 +104,7 @@ function Pages({ selectionEnd, input, mode, pageSize }) {
     // plus a little space so the cursor doesn't cover up the characters
     const currentPosition = selectionEnd - lines.reduce((length, line) => length + line.length, 0) - currentLine + 0.5
     // Move the paper to the left based on the position on the current line
-    const style = {}
+    const style: { right?: string, bottom?: string } = {}
     style.right = `calc(50% - ${width} + ${dimensions.padding} + ${currentPosition * dimensions.fontWidth}px)`
     // Move the paper up based on the current line and current page
     // Place it on the lower third of the screen
@@ -115,15 +120,15 @@ function Pages({ selectionEnd, input, mode, pageSize }) {
     bottom += `+ (${lines.length - (currentPage * maxLines)} * ${dimensions.fontSize}))`
     style.bottom = bottom
     setStyles(style)
-  }
+  }, [input, pageSize, selectionEnd])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (mode === 'read') {
       setStyles({ position: 'static' })
     } else {
       renderPages()
     }
-  }, [input, selectionEnd, mode, pageSize])
+  }, [renderPages, mode])
 
   return(
     <div className="js-papers papers" style={styles}>

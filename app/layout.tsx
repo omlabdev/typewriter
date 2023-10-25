@@ -1,4 +1,4 @@
-import './styles/general.css'
+import '../styles/general.css'
 
 export const metadata = {
   title: 'Typewriter',

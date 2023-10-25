@@ -1,0 +1,1 @@
+export type PageDimensions = { height: string, width: string, maxLines: number, maxLineLength: number }

@@ -1,0 +1,1 @@
+export type Dimensions = { fontSize: string, padding: string, margin: string, fontWidth: number }
