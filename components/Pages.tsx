@@ -8,37 +8,16 @@ import Page from './Page'
 
 import { Mode } from '@/types/mode'
 import { PageSize } from '@/types/pageSize'
-import { Dimensions } from '@/types/dimensions'
-import { PageDimensions } from '@/types/pageDimensions'
 
-const pageSizes: { [label: string]: PageDimensions } = {
-  a4: {
-    height: '297mm',
-    width: '210mm',
-    maxLines: 60,
-    maxLineLength: 70,
-  },
-  ltr: {
-    height: '8.5in',
-    width: '11in',
-    maxLines: 60,
-    maxLineLength: 70,
-  }
-}
-// Dimensions constants regarding the pages and font
-const dimensions: Dimensions = {
-  margin: '15px',
-  padding: '15px',
-  fontSize: '18px',
-  fontWidth: 10.8,
-}
+import { pageSizes } from '@/constants/pageSizes'
+import { dimensions } from '@/constants/dimesions'
 
 function Pages({ selectionEnd, input, mode, pageSize }: { selectionEnd: number, input: string, mode: Mode, pageSize: PageSize }) {
   const [pages, setPages] = useState<ReactNode[]>([])
   const [styles, setStyles] = useState({})
 
   /**
-   * Renders the text in the input element
+   * Renders the text in the input element and positions the page around the cursor position
    */
   const renderPages = useCallback(() => {
     const { height, width, maxLines, maxLineLength } = pageSizes[pageSize]
@@ -70,8 +49,8 @@ function Pages({ selectionEnd, input, mode, pageSize }: { selectionEnd: number, 
       }
       // If the line length exceeds the maxLineLength const, split it into two lines (soft wrap)
       if (line.length > maxLineLength) {
-        lines[i] = line.slice(maxLineLength + 1)
-        lines.splice(i, 0, line.substr(0, maxLineLength + 1))
+        lines[i] = line.slice(maxLineLength)
+        lines.splice(i, 0, line.slice(0, maxLineLength))
         // If this index was the current line but it's not anymore then the current line
         // must be the one that was split from this one
         if ((currentLine === i) && (lines[i].indexOf(marker) === -1)) {
